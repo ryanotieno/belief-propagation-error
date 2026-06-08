@@ -1,0 +1,3 @@
+posterior_after_draws(P(A | W1...x-1)[prior], P(A), P(W | A) [likelihoods], W1, W2,....,Wx [observations])
+
+return posterior probability

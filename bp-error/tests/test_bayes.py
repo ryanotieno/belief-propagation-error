@@ -1,0 +1,13 @@
+# tests/test_bayes.py
+import jax.numpy as jnp
+import pytest
+
+from bp_error.bayes import posterior_loop, posterior_vectorized
+
+
+def test_no_observations_returns_prior():
+    prior = jnp.array([0.3, 0.7])
+    likelihoods = jnp.array([[0.5, 0.5], [0.5, 0.5]])
+    observations = jnp.array([], dtype=jnp.int32)
+    result = posterior_loop(prior, likelihoods, observations)
+    assert jnp.allclose(result, prior)
