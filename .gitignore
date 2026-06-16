@@ -33,3 +33,15 @@ key
 key.pub
 *.pem
 *.key
+
+.venv/
+.pytest_cache/
+__pycache__/
+*.pyc
+.quarto/
+_freeze/
+_output/
+key
+key.pub
+*.pem
+*.key
