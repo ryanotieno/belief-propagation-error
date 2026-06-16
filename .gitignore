@@ -28,3 +28,8 @@ figures/*
 .DS_Store
 Thumbs.db
 **/*.quarto_ipynb
+
+key
+key.pub
+*.pem
+*.key
