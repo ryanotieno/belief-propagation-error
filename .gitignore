@@ -1,0 +1,30 @@
+# Virtual environment
+.venv/
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# pytest
+.pytest_cache/
+
+# Quarto
+/_output/
+/.quarto/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data and figures (commit these selectively)
+data/*
+!data/.gitkeep
+figures/*
+!figures/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+**/*.quarto_ipynb
