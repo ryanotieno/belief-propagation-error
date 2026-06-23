@@ -31,7 +31,6 @@ def posterior_loop(
     temp = prior
     results = []
     results.append(temp)
-    final = jnp.empty(2)
     for obs in observations:
         temp = temp * likelihoods[:, obs]
         temp = temp / jnp.sum(temp)
