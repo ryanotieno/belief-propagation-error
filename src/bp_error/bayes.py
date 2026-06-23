@@ -1,6 +1,7 @@
 # src/bp_error/bayes.py
 import jax.numpy as jnp
 from jax import Array
+from jax import vmap
 
 
 def posterior_loop(
@@ -51,4 +52,12 @@ def posterior_vectorized(
     prior, normalize.
     """
     # TODO: implement
-    ...
+    likelihoods_stack = likelihoods[:, observations]
+
+    likelihoods_stack = jnp.array(likelihoods_stack)
+    #so what I want now is to just multiply urn a by everything in the first column, and row b by the second.
+    #first i will compress my stack using prod()
+    stack_comp = jnp.prod(likelihoods_stack, axis = 1)
+    posterior = prior * stack_comp
+    posterior = posterior / jnp.sum(posterior)
+    return posterior
