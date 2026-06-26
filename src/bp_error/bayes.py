@@ -61,3 +61,58 @@ def posterior_vectorized(
     posterior = prior * stack_comp
     posterior = posterior / jnp.sum(posterior)
     return posterior
+
+from pydantic import BaseModel, ConfigDict, field_validator
+
+
+class BayesianUpdate(BaseModel):
+    """A single Bayesian inference problem."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    prior: Array
+    likelihoods: Array  # shape (K, M)
+
+    @field_validator("prior")
+    @classmethod
+    def prior_sums_to_one(cls, v: Array) -> Array:
+        # TODO: raise ValueError if v does not sum to 1 (within tolerance).
+        if jnp.sum(v) < 0.98 or jnp.sum(v) > 1:
+            raise ValueError("prior has to sum to 1")
+        return v
+        ...
+
+    @field_validator("likelihoods")
+    @classmethod
+    def likelihood_rows_sum_to_one(cls, v: Array) -> Array:
+        # TODO: raise ValueError if any row does not sum to 1.
+        for like in v:
+            if jnp.sum(like) < 0.98 or jnp.sum(like) > 1:
+                raise ValueError("likelihoods has to sum to 1")
+
+
+        ...
+
+    def update(self, observations: Array) -> Array:
+        """Return the posterior after observing the sequence."""
+        # TODO: call posterior_vectorized.
+        result = posterior_vectorized(self, observations)
+        print(result)
+        return result
+        ...
+
+def grid_posterior_loop(grid, prior, observations):
+    results = []
+    results.append(prior)
+    posterior = prior
+    for obs in observations:
+        if obs == 0:
+            likelihood = grid
+        else:
+            likelihood = 1 - grid
+        posterior = likelihood * posterior
+        posterior = posterior / jnp.sum(posterior)
+        results.append(posterior)
+
+    results = jnp.array(results)
+    results = jnp.prod(results, axis = 0)
+    return posterior
