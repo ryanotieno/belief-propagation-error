@@ -9,6 +9,7 @@ dependencies = [
     "jax>=0.10.1",
     "jupyter>=1.1.1",
     "matplotlib>=3.11.0",
+    "networkx>=3.6.1",
     "pydantic>=2.13.4",
     "quarto>=0.1.0",
 ]
