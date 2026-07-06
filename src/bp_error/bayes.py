@@ -119,8 +119,8 @@ def grid_posterior_loop(grid, prior, observations):
 
 
 def message_passing(network, adj_mat, i, j, max_itr):
-    failure_fwr = 1
-    failure_bkw = 1
+    failure_fwr = network[f'{j}, {i}']
+    failure_bkw = network[f'{i}, {j}']
     for a in range(0, max_itr): #get me all of 0's neighbors
         if adj_mat[i][a] == 1 and a != j:
             #message pass into the neighbors of i, and bring back out their mu values
@@ -129,7 +129,7 @@ def message_passing(network, adj_mat, i, j, max_itr):
     for a in range(0, max_itr): #get me all of 2's neighbors
         if adj_mat[j][a] == 1 and a != i:
             #message pass into the neighbors of i, and bring back out their mu values
-            failure_bkw =  failure_bkw * network[f'{a}, {j}'] #message_passing(network, adj_mat, i, a, max_itr)
+            failure_bkw =  failure_bkw * network[f'{j}, {a}'] #message_passing(network, adj_mat, i, a, max_itr)
     failure = jnp.array([failure_fwr, failure_bkw])
     return failure
     
