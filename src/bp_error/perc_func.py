@@ -16,3 +16,11 @@ def perc_message_passing(network, adj_mat, i, j, p, max_itr):
             failure_bkw =  (1-p) + (p*failure_bkw * network[f'{j}, {a}']) #message_passing(network, adj_mat, i, a, max_itr)
     failure = jnp.array([failure_fwr, failure_bkw])
     return failure
+
+def initialize_messages(connections, A, N):
+    for i in range(N):
+        for j in range(N):
+            if A[i][j] == 1 and A[j][i] == 1:
+                connections[f'{i}, {j}'] = 0.5
+                connections[f'{j}, {i}'] = 0.5
+    return connections
