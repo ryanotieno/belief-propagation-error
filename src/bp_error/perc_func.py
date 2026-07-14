@@ -1,6 +1,7 @@
 import jax.numpy as jnp
 from jax import Array
 from jax import vmap
+import math
 
 def perc_message_passing(network, adj_mat, i, j, p, max_itr):
     failure_fwr = network[f'{j}, {i}']
@@ -16,6 +17,27 @@ def perc_message_passing(network, adj_mat, i, j, p, max_itr):
             failure_bkw =  (1-p) + (p*failure_bkw * network[f'{j}, {a}']) #message_passing(network, adj_mat, i, a, max_itr)
     failure = jnp.array([failure_fwr, failure_bkw])
     return failure
+
+def declare_vector(p, N):
+    V = []
+    for i in range(N*2):
+        V.append(math.log(1-p + p*0.5))
+    return V
+
+def update_v_and_messages(p, messages):
+    V = []
+    for keys, values in messages.items():
+        i, j = keys.split(',')
+        V.append(math.log(1-p + p*messages[f'{i},{j}']))
+    return V
+
+def perc_log_meesage_pass(B, V, messages):
+    for keys, values in B.items():
+        i, j = keys.split(',')
+        mu_i_j = math.exp(jnp.dot(B[f'{i},{j}'], V))
+        messages[f'{i},{j}'] = mu_i_j
+    return messages
+        
 
 def initialize_messages(connections, A, N):
     for i in range(N):
