@@ -20,7 +20,7 @@ def perc_message_passing(network, adj_mat, i, j, p, max_itr):
 
 def declare_vector(p, N):
     V = []
-    for i in range(N*2):
+    for i in range(N*(N-1)):
         V.append(math.log(1-p + p*0.5))
     return V
 
@@ -31,13 +31,27 @@ def update_v_and_messages(p, messages):
         V.append(math.log(1-p + p*messages[f'{i},{j}']))
     return V
 
-def perc_log_meesage_pass(B, V, messages):
+def perc_log_meesage_pass(A, B, V, messages):
     for keys, values in B.items():
         i, j = keys.split(',')
-        mu_i_j = math.exp(jnp.dot(B[f'{i},{j}'], V))
-        messages[f'{i},{j}'] = mu_i_j
+        temp_B = jnp.array(B[f'{i},{j}'])
+        mu_i_j = math.exp(jnp.dot(temp_B, jnp.array(V)))
+        if A[i][j] != 0:
+            messages[f'{i},{j}'] = mu_i_j
+        else:
+            messages[f'{i},{j}'] = 0.5
     return messages
         
+
+
+
+
+
+
+
+
+
+
 
 def initialize_messages(connections, A, N):
     for i in range(N):
